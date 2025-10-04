@@ -3,7 +3,7 @@ from src.utils.stack import Stack
 
 class Calculator(Stack):
 
-    def use_opertation(self, operation: str) -> None:
+    def use_operation(self, operation: str) -> None:
         '''
         Функция производит переданную операция с последними двумя числами стека и кладет обратно полученное значение
 

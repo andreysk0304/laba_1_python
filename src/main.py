@@ -1,94 +1,5 @@
 from src.utils.calculator import Calculator
-from src.utils.stack import Stack
-
-def get_format(state: str, current_token: str) -> int | float | str:
-    '''
-    Функция преобразует токен в типе str в необходимый для счета тип
-
-    :param state: тип токена ( OPERATION | NUMBER | FLOAT )
-    :param current_token: токен
-    :return: возвращает преобразованный в нужный тип токен
-    '''
-
-
-    if state == 'NUMBER':
-        return int(current_token)
-
-    elif state == 'FLOAT':
-        return float(current_token)
-
-    else:
-        return current_token
-
-
-def tokenize_fsm(expr: str) -> list:
-    '''
-    Функция разбивает на токены входную строку
-
-    :param expr: входная строка с польской нотацией
-    :return: Список токенов с их типами ("тип", "токен")
-    '''
-
-    tokens = []
-    state = 'START'
-    current_token = ''
-
-    for index, char in enumerate(expr):
-        if char == ' ':
-
-            if state != 'START':
-                tokens.append((state, get_format(state=state, current_token=current_token)))
-
-            else:
-                pass
-
-            state = 'START'
-            current_token = ''
-
-
-        elif state == 'START':
-            if char.isdigit() or char == '~':
-                state = 'NUMBER'
-
-                if char == '~':
-                    current_token = '-'
-
-                else:
-                    current_token = char
-
-            elif char in ['+', '-', '*', '/', '%']:
-                state = 'OPERATION'
-                current_token = char
-
-        elif state == 'NUMBER':
-            if char.isdigit():
-                current_token += char
-
-            elif char == '.':
-                state = 'FLOAT'
-
-                current_token += char
-
-
-        elif state == 'FLOAT':
-            if char.isdigit():
-                current_token += char
-
-
-        elif state == 'OPERATION':
-            if char in ['/', '*']:
-                current_token += char
-
-
-    else:
-        if state != 'START':
-            tokens.append((state, get_format(state=state, current_token=current_token)))
-
-        else:
-            pass
-
-    return tokens
-
+from src.utils.tokenizer import tokenize_fsm
 
 
 def calculate(tokens: list) -> float | int:
@@ -99,28 +10,47 @@ def calculate(tokens: list) -> float | int:
     :return: посчитанный пример в обратной польской нотации
     '''
 
-    calulator = Calculator()
+    calculator = Calculator()
 
-    for token in tokens:
+    if tokens.count(('OPEN_BRACKET', '(')) != tokens.count(('CLOSE_BRACKET', ')')):
+        raise SyntaxError('Не правильно расставлены скобки в примере.')
 
-        state, element = token
+    while ('OPEN_BRACKET', '(') in tokens:
+        for index, token in enumerate(tokens):
 
-        if state == 'NUMBER' or state == 'FLOAT':
-            calulator.add(element)
+            token_type, element = token
 
-        elif state == 'OPERATION':
-            calulator.use_opertation(operation=element)
+            if token_type == 'OPEN_BRACKET':
+
+                status, tokens = check_bracket(index=index, tokens=tokens)
+
+                if not status:
+                    raise SyntaxError(f'Не правильно расставлены скобки в примере.')
+
+                else:
+                    break
+
+    for index, token in enumerate(tokens):
+
+        token_type, element = token
+
+        if token_type == 'NUMBER' or token_type == 'FLOAT':
+            calculator.add(element)
+
+        elif token_type == 'OPERATION':
+            calculator.use_operation(operation=element)
+
+        elif token_type == 'CLOSE_BRACKET':
+            raise SyntaxError('Не правильно расставлены скобки в примере.')
 
         else:
-            raise 'Не известный тип токена'
+            raise TypeError(f'Не известный тип токена: {token_type}')
 
-    if len(calulator.get()) > 1:
+    if len(calculator.get()) > 1:
         raise 'Невозможно посчитать введённый пример ( введено не достаточно знаков операций )'
 
     else:
-        return calulator.get()[0]
-
-
+        return calculator.get()[0]
 
 
 def calculate_now(input_data: str) -> int | float:
