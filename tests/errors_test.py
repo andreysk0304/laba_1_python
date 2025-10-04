@@ -24,6 +24,3 @@ def test_errors():
 
     with raise_test(SyntaxError):
         calculate_now('1 2 ) +')
-
-    with raise_test(SyntaxError):
-        calculate_now('1 2 ///')

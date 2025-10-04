@@ -12,55 +12,64 @@ class Calculator(Stack):
         '''
 
         if not(self.can_use_operation()):
-            raise TypeError('Не верно введён пример, невозможно посчитать, количество чисел не удовлетворяет количеству действий')
+            if operation != '-':
+                raise TypeError('Не верно введён пример, невозможно посчитать, количество чисел не удовлетворяет количеству действий')
 
-        first_digit = self.stack[-2]
-        second_digit = self.stack[-1]
+            else:
+                digit = self.stack[-1]
 
-        self.pop()
+                self.stack.pop()
 
-        match operation:
-            case '+':
-                answer = first_digit + second_digit
+                answer = -digit
 
-            case '-':
-                answer = first_digit - second_digit
+        else:
+            first_digit = self.stack[-2]
+            second_digit = self.stack[-1]
 
-            case '*':
-                answer = first_digit * second_digit
+            self.pop()
 
-            case '**':
-                answer = first_digit ** second_digit
+            match operation:
+                case '+':
+                    answer = first_digit + second_digit
 
-            case '/':
-                if second_digit != 0:
-                    answer = first_digit / second_digit
+                case '-':
+                    answer = first_digit - second_digit
 
-                else:
-                    raise ZeroDivisionError("Делить на ноль нельзя.")
+                case '*':
+                    answer = first_digit * second_digit
+
+                case '**':
+                    answer = first_digit ** second_digit
+
+                case '/':
+                    if second_digit != 0:
+                        answer = first_digit / second_digit
+
+                    else:
+                        raise ZeroDivisionError("Делить на ноль нельзя.")
 
 
-            case '//':
-                if type(first_digit) == float or type(second_digit) == float:
-                    raise TypeError("Целочисленное деление доступно только для целых чисел.")
+                case '//':
+                    if type(first_digit) == float or type(second_digit) == float:
+                        raise TypeError("Целочисленное деление доступно только для целых чисел.")
 
-                elif second_digit == 0:
-                    raise ZeroDivisionError("Делить на ноль нельзя.")
+                    elif second_digit == 0:
+                        raise ZeroDivisionError("Делить на ноль нельзя.")
 
-                else:
-                    answer = first_digit // second_digit
+                    else:
+                        answer = first_digit // second_digit
 
-            case '%':
-                if type(first_digit) == float or type(second_digit) == float:
-                    raise "Деление с остатком доступно только для целых чисел."
+                case '%':
+                    if type(first_digit) == float or type(second_digit) == float:
+                        raise "Деление с остатком доступно только для целых чисел."
 
-                elif second_digit == 0:
-                    raise "Делить на ноль нельзя."
+                    elif second_digit == 0:
+                        raise "Делить на ноль нельзя."
 
-                else:
-                    answer = first_digit % second_digit
+                    else:
+                        answer = first_digit % second_digit
 
-            case _:
-                raise SyntaxError('Не известная операция')
+                case _:
+                    raise SyntaxError('Не известная операция')
 
         self.stack.append(answer)

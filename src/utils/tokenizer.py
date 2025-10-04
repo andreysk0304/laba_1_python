@@ -12,70 +12,85 @@ def tokenize_fsm(expr: str) -> list:
     tokens = []
     state = 'START'
     current_token = ''
+    i = 0 # enumerate не подошел потому что мне нужно отконтролить индекс когда я пишу // и **
 
-    for index, char in enumerate(expr):
-        if char == ' ':
+    while i < len(expr):
+        char = expr[i]
 
-            if state != 'START':
-                tokens.append((state, get_format(state=state, current_token=current_token)))
-
-            else:
-                pass
+        if char.isspace():
+            if current_token:
+                tokens.append((state, get_format(state, current_token)))
+                current_token = ''
 
             state = 'START'
-            current_token = ''
 
+            i += 1
 
-        elif state == 'START':
-            if char.isdigit() or char == '~':
+            continue
+
+        if state == 'START':
+            if char.isdigit() or char in ['~', '$']:
                 state = 'NUMBER'
 
-                if char == '~' or char == '$':
-                    current_token = char.replace('~', '-', 1).replace('$', '', 1)
+                current_token = char.replace('~', '-', 1).replace('$', '', 1)
+
+            elif char in ['+', '-', '*', '/', '%']:
+                # Проверяем двойные операции ** и //
+                if i + 1 < len(expr) and expr[i + 1] == char and char in ['*', '/']:
+                    current_token = char * 2
+                    i += 1  # пропускаем второй символ
 
                 else:
                     current_token = char
 
-            elif char in ['+', '-', '*', '/', '%']:
-                state = 'OPERATION'
-                current_token = char
+                tokens.append(('OPERATION', current_token))
+
+                state = 'START'
+                current_token = ''
 
             elif char == '(':
-                state = 'OPEN_BRACKET'
-                current_token = char
+                tokens.append(('OPEN_BRACKET', char))
 
             elif char == ')':
-                state = 'CLOSE_BRACKET'
-                current_token = char
+                tokens.append(('CLOSE_BRACKET', char))
+
+            else:
+                raise ValueError(f"Неизвестный символ: {char}")
 
         elif state == 'NUMBER':
             if char.isdigit():
                 current_token += char
 
             elif char == '.':
-                state = 'FLOAT'
+                if '.' in current_token:
+                    raise ValueError("Некорректное число: две точки подряд")
 
+                state = 'FLOAT'
                 current_token += char
 
             else:
+                tokens.append((state, get_format(state, current_token)))
+
+                current_token = ''
                 state = 'START'
 
+                continue
 
         elif state == 'FLOAT':
             if char.isdigit():
                 current_token += char
 
+            else:
+                tokens.append((state, get_format(state, current_token)))
 
-        elif state == 'OPERATION':
-            if char in ['/', '*']:
-                current_token += char
+                current_token = ''
+                state = 'START'
 
+                continue
 
-    else:
-        if state != 'START':
-            tokens.append((state, get_format(state=state, current_token=current_token)))
+        i += 1
 
-        else:
-            pass
+    if current_token:
+        tokens.append((state, get_format(state, current_token)))
 
     return tokens
