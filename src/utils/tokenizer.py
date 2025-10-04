@@ -30,8 +30,8 @@ def tokenize_fsm(expr: str) -> list:
             if char.isdigit() or char == '~':
                 state = 'NUMBER'
 
-                if char == '~':
-                    current_token = '-'
+                if char == '~' or char == '$':
+                    current_token = char.replace('~', '-', 1).replace('$', '', 1)
 
                 else:
                     current_token = char
@@ -56,6 +56,9 @@ def tokenize_fsm(expr: str) -> list:
                 state = 'FLOAT'
 
                 current_token += char
+
+            else:
+                state = 'START'
 
 
         elif state == 'FLOAT':

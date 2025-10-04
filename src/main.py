@@ -1,4 +1,5 @@
 from src.utils.calculator import Calculator
+from src.utils.check_bracket_component import check_bracket
 from src.utils.tokenizer import tokenize_fsm
 
 
@@ -69,7 +70,7 @@ def calculate_now(input_data: str) -> int | float:
 
 def main():
     while True:
-        input_data: str = input()
+        input_data: str = input('Введите пример (команда break остановит программу): ')
 
         if input_data.lower() == 'break':
             print('Выполнение кода прекращено.')

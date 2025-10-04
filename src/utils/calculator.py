@@ -61,6 +61,6 @@ class Calculator(Stack):
                     answer = first_digit % second_digit
 
             case _:
-                raise f'Не известная операция {operation}'
+                raise SyntaxError('Не известная операция')
 
         self.stack.append(answer)
