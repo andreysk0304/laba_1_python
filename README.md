@@ -29,8 +29,9 @@
     │   │       ├── calculator.py              # Класс калькулятора
     │   │       ├── stack.py                   # Класс стэка
     │   │       ├── tokenizer.py               # Токенизатор входной строки
-    │   │       ├── format_component.py        # Преобразование значения в нужный тип ( для токенов )
-    │   │       ├── check_bracket_component.py # Проверка скобки на возможность расчёта
+    │   │       ├── components/
+    │   │           ├── format_component.py        # Преобразование значения в нужный тип ( для токенов )
+    │   │           ├── check_bracket_component.py # Проверка скобки на возможность расчёта
     │   │ 
     │   ├── tests/                             # Unit тесты
     │   │   ├── calculator_test.py             # Тест вычислений

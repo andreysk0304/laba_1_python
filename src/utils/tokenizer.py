@@ -1,4 +1,4 @@
-from src.utils.format_component import get_format
+from src.utils.components.format_component import get_format
 
 
 def tokenize_fsm(expr: str) -> list:

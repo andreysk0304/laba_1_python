@@ -16,3 +16,4 @@ def test_calculate():
     assert calculate_now('( 3 4 + ) ( 5 2 - ) *') == 21 #Пример Самира 1
     assert calculate_now('( 8 ( 3 2 + ) - ) 4 *') == 12 #Пример Самира 2
     assert calculate_now('( 3 ( 4 5 + ) - ) 2 ( 3 4 + ) * *') == -84
+    assert calculate_now('(                 30          80          * )') == 2400

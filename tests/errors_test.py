@@ -23,4 +23,7 @@ def test_errors():
         calculate_now('( 1 ( 1 2 ) + ) ( 23 12 )')
 
     with raise_test(SyntaxError):
+        calculate_now('1 2 ) +')
+
+    with raise_test(SyntaxError):
         calculate_now('1 2 ///')

@@ -1,5 +1,5 @@
 from src.utils.calculator import Calculator
-from src.utils.check_bracket_component import check_bracket
+from src.utils.components.check_bracket_component import check_bracket
 from src.utils.tokenizer import tokenize_fsm
 
 
