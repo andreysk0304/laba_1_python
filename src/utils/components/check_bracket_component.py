@@ -1,4 +1,5 @@
 from src.utils.calculator import Calculator
+from src.utils.exceptions import IncorrectPlacementOfBrackets, IncorrectOperationsCount
 
 
 def check_bracket(tokens: list, index: int) -> (bool, list):
@@ -28,7 +29,7 @@ def check_bracket(tokens: list, index: int) -> (bool, list):
                 status, tokens = check_bracket(tokens=tokens, index=index_now)
 
                 if not status:
-                    raise SyntaxError(f'Не правильно расставлены скобки в примере {token_type, element}')
+                    raise IncorrectOperationsCount
 
                 else:
                     break

@@ -1,5 +1,6 @@
 from src.utils.calculator import Calculator
 from src.utils.components.check_bracket_component import check_bracket
+from src.utils.exceptions import IncorrectPlacementOfBrackets, IncorrectOperationsCount
 from src.utils.tokenizer import tokenize_fsm
 
 
@@ -14,7 +15,7 @@ def calculate(tokens: list) -> float | int:
     calculator = Calculator()
 
     if tokens.count(('OPEN_BRACKET', '(')) != tokens.count(('CLOSE_BRACKET', ')')):
-        raise SyntaxError('Не правильно расставлены скобки в примере.')
+        raise IncorrectPlacementOfBrackets()
 
     while ('OPEN_BRACKET', '(') in tokens:
         for index, token in enumerate(tokens):
@@ -26,7 +27,7 @@ def calculate(tokens: list) -> float | int:
                 status, tokens = check_bracket(index=index, tokens=tokens)
 
                 if not status:
-                    raise SyntaxError(f'Не правильно расставлены скобки в примере.')
+                    raise IncorrectOperationsCount
 
                 else:
                     break
@@ -42,7 +43,7 @@ def calculate(tokens: list) -> float | int:
             calculator.use_operation(operation=element)
 
         elif token_type == 'CLOSE_BRACKET':
-            raise SyntaxError('Не правильно расставлены скобки в примере.')
+            raise IncorrectPlacementOfBrackets()
 
         else:
             raise TypeError(f'Не известный тип токена: {token_type}')
@@ -59,6 +60,9 @@ def calculate_now(input_data: str) -> int | float:
     :param input_data: Входная строка (пример в обратной польской нотации)
     :return: Значение входной строки
     '''
+
+    if input_data.strip() == '':
+        raise SyntaxError('Не вводите пустую строку.')
 
     tokens = tokenize_fsm(input_data)
 

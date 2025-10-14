@@ -1,3 +1,4 @@
+from src.utils.exceptions import IncorrectOperationsCount
 from src.utils.stack import Stack
 
 
@@ -12,8 +13,8 @@ class Calculator(Stack):
         '''
 
         if not(self.can_use_operation()):
-            if operation != '-':
-                raise TypeError('Не верно введён пример, невозможно посчитать, количество чисел не удовлетворяет количеству действий')
+            if operation != '~':
+                raise IncorrectOperationsCount()
 
             else:
                 digit = self.stack[-1]
@@ -61,13 +62,19 @@ class Calculator(Stack):
 
                 case '%':
                     if type(first_digit) == float or type(second_digit) == float:
-                        raise "Деление с остатком доступно только для целых чисел."
+                        raise TypeError("Деление с остатком доступно только для целых чисел.")
 
                     elif second_digit == 0:
-                        raise "Делить на ноль нельзя."
+                        raise ZeroDivisionError("Делить на ноль нельзя.")
 
                     else:
                         answer = first_digit % second_digit
+
+                case '~':
+                    raise SyntaxError('Не верно использован унарный минус')
+
+                case '$':
+                    raise SyntaxError('Не верно использован унарный плюс')
 
                 case _:
                     raise SyntaxError('Не известная операция')

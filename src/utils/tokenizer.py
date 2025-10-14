@@ -10,9 +10,11 @@ def tokenize_fsm(expr: str) -> list:
     '''
 
     tokens = []
+
     state = 'START'
     current_token = ''
-    i = 0 # enumerate не подошел потому что мне нужно отконтролить индекс когда я пишу // и **
+
+    i = 0 # enumerate не подошел потому что мне нужно отконтролить индекс когда я пишу // или **
 
     while i < len(expr):
         char = expr[i]
@@ -35,10 +37,10 @@ def tokenize_fsm(expr: str) -> list:
                 current_token = char.replace('~', '-', 1).replace('$', '', 1)
 
             elif char in ['+', '-', '*', '/', '%']:
-                # Проверяем двойные операции ** и //
-                if i + 1 < len(expr) and expr[i + 1] == char and char in ['*', '/']:
+                if i + 1 < len(expr) and expr[i + 1] == char and char in ['*', '/']: # Проверяем двойные операции ** и //
                     current_token = char * 2
-                    i += 1  # пропускаем второй символ
+
+                    i += 1  # Скипаем второй символ (бо он нам не нужен тут)
 
                 else:
                     current_token = char
